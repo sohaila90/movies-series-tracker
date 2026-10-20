@@ -1,19 +1,12 @@
 import { useState } from "react";
-// import heroImg from "./assets/hero.png";
-import "./App.css";
 
 function App() {
   const [title, setTitle] = useState("");
   const [selectedType, setSelectedType] = useState("movie");
   const [selectedStatus, setSelectedStatus] = useState("watching");
   const [selectedRating, setSelectedRating] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const listToAddMovies = {
-    title: title,
-    type: selectedType,
-    status: selectedStatus,
-    rating: selectedRating,
-  };
   const ratingNumbers = [
     {
       ratingNumber: 1,
@@ -33,11 +26,13 @@ function App() {
   ];
   const listOfRatings = ratingNumbers.map((numbers) => (
     <RatingCard
+      key={numbers.ratingNumber}
       ratingNumber={numbers.ratingNumber}
       selectedRating={selectedRating}
       setSelectedRating={setSelectedRating}
     />
   ));
+
   const [watchList, setWatchList] = useState([
     {
       id: 1, // Used in JSX as a key
@@ -68,6 +63,15 @@ function App() {
       rating: 0,
     },
   ]);
+  const length = watchList.length + 1;
+
+  const listToAddMovies = {
+    id: length,
+    title: title,
+    type: selectedType,
+    status: selectedStatus,
+    rating: selectedRating,
+  };
   const listOfMovieCards = watchList.map((movie) => (
     <MovieCard
       key={movie.id}
@@ -84,10 +88,6 @@ function App() {
 
   return (
     <>
-      <div>
-        Vis minst 4 filmer eller serier.
-        <div>{listOfMovieCards}</div>
-      </div>
       <h1>Add the title of your movie</h1>
       <input
         type="text"
@@ -96,6 +96,10 @@ function App() {
       />
       <button onClick={AddMovie}>Add Movie</button>
       {title}
+      {errorMessage}
+      <div>
+        <div>{listOfMovieCards}</div>
+      </div>
       <h1>Choose the type</h1>
       <input
         type="radio"
@@ -131,7 +135,15 @@ function App() {
     </>
   );
   function AddMovie() {
+    if (title === "") {
+      setErrorMessage("Please write a title");
+      return;
+    }
     setWatchList([...watchList, listToAddMovies]);
+    setTitle("");
+    setSelectedType("");
+    setSelectedStatus("");
+    setSelectedRating("");
   }
 }
 function MovieCard(props) {
