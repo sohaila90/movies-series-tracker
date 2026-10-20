@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./App.css";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -88,7 +89,7 @@ function App() {
 
   return (
     <>
-      <h1>Add the title of your movie</h1>
+      <h1 className="add-movie">Add the title of your movie</h1>
       <input
         type="text"
         value={title}
