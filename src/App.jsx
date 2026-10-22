@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "./App.css";
+import MovieCard from "./MovieCard";
+import RatingCard from "./RatingCard";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -64,10 +66,9 @@ function App() {
       rating: 0,
     },
   ]);
-  const length = watchList.length + 1;
 
   const listToAddMovies = {
-    id: length,
+    id: crypto.randomUUID(),
     title: title,
     type: selectedType,
     status: selectedStatus,
@@ -80,6 +81,8 @@ function App() {
       type={movie.type}
       status={movie.status}
       rating={movie.rating}
+      movie={movie.id}
+      DeleteMovie={DeleteMovie}
     />
   ));
 
@@ -146,32 +149,12 @@ function App() {
     setSelectedStatus("");
     setSelectedRating("");
   }
-}
-function MovieCard(props) {
-  return (
-    <div>
-      <h2>Title: {props.title}</h2>
-      <h2>Type: {props.type}</h2>
-      <h2>Status: {props.status}</h2>
-      <h2>Rating: {props.rating}</h2>
-    </div>
-  );
-}
-
-function RatingCard(props) {
-  return (
-    <div>
-      <h2>{props.ratingNumber}</h2>
-      <input
-        type="radio"
-        value={props.ratingNumber}
-        checked={props.ratingNumber === props.selectedRating}
-        onChange={(event) =>
-          props.setSelectedRating(Number(event.target.value))
-        }
-      />
-    </div>
-  );
+  function DeleteMovie(moviesToDeleteId) {
+    const deleteMovie = watchList.filter(
+      (movie) => movie.id !== moviesToDeleteId,
+    );
+    setWatchList(deleteMovie);
+  }
 }
 
 export default App;
